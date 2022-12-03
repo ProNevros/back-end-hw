@@ -44,7 +44,7 @@ router.put('/:id', (req, res) => {
     res.json(ctg)
   });
 });
-  
+
 
 router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
