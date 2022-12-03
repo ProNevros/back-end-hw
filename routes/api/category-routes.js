@@ -6,8 +6,8 @@ const { Category, Product } = require('../../models');
 router.get('/', (req, res) => {
   // find all categories
   // be sure to include its associated Products
-  Category.findAll().then((categoryData) => {
-    res.json(categoryData);
+  Category.findAll().then((ctgData) => {
+    res.json(ctgData);
   });
 });
 
@@ -19,8 +19,8 @@ router.get('/:id', (req, res) => {
       id: req.params.id
     },
     include: [Product]
-  }).then((categoryData) => {
-    res.json(categoryData);
+  }).then((ctgData) => {
+    res.json(ctgData);
   });
 });
 
@@ -46,8 +46,22 @@ router.put('/:id', (req, res) => {
 });
   
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete a category by its `id` value
+  try {
+    const ctgData = await Category.destroy({
+      where: {
+        id: req.params.id
+      }
+    });
+    if (!ctgData) {
+      res.status(404).json({ message: 'No matching category found' });
+      return;
+    }
+    res.status(200).json(ctgData);
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;
